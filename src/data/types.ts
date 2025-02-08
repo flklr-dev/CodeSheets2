@@ -1,25 +1,21 @@
-export interface CodeExample {
+export interface Example {
   id: string;
   title: string;
   description: string;
   code: string;
-  output?: string;
   explanation: string;
-}
-
-export interface Subcategory {
-  id: string;
-  title: string;
-  description: string;
-  examples: CodeExample[];
+  table?: {
+    headers: string[];
+    rows: string[][];
+  };
 }
 
 export interface Category {
   id: string;
   title: string;
   description: string;
-  icon: string;
-  subcategories: Subcategory[];
+  icon?: string;
+  examples: Example[];
 }
 
 export interface ProgrammingLanguage {

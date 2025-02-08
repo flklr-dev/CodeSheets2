@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -14,21 +14,19 @@ import { COLORS } from '../constants/colors';
 import * as Clipboard from 'expo-clipboard';
 
 const DetailScreen = ({ route, navigation }: any) => {
-  const { subcategory, category, language, currentExampleIndex = 0 } = route.params || {};
-  const [exampleIndex, setExampleIndex] = useState(currentExampleIndex);
-  const [copied, setCopied] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const { category, language } = route.params || {};
+  const [copied, setCopied] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (copied) {
       const timer = setTimeout(() => {
         setCopied(false);
-      }, 2000); // Reset after 2 seconds
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [copied]);
 
-  if (!subcategory || !category || !language) {
+  if (!category || !language) {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>No content available</Text>
@@ -36,28 +34,15 @@ const DetailScreen = ({ route, navigation }: any) => {
     );
   }
 
-  const currentExample = subcategory.examples[exampleIndex];
-  
-  if (!currentExample) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>No example found</Text>
-      </View>
-    );
-  }
-
-  const copyCode = async () => {
-    await Clipboard.setStringAsync(currentExample.code);
+  const copyCode = async (code: string) => {
+    await Clipboard.setStringAsync(code);
     setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
   };
 
-  const shareCode = async () => {
+  const shareCode = async (title: string, code: string) => {
     try {
       await Share.share({
-        message: `${currentExample.title}\n\n${currentExample.code}`,
+        message: `${title}\n\n${code}`,
       });
     } catch (error) {
       console.error(error);
@@ -81,155 +66,98 @@ const DetailScreen = ({ route, navigation }: any) => {
     });
   };
 
-  const handleNavigation = (direction: 'next' | 'prev') => {
-    if (direction === 'next') {
-      if (exampleIndex === subcategory.examples.length - 1) {
-        navigation.goBack();
-        return;
-      }
-      setExampleIndex(prev => Math.min(subcategory.examples.length - 1, prev + 1));
-    } else {
-      setExampleIndex(prev => Math.max(0, prev - 1));
-    }
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  const renderTable = (table: any) => {
+    return (
+      <View style={styles.table}>
+        <View style={styles.tableHeader}>
+          {table.headers.map((header: string, index: number) => (
+            <Text key={index} style={styles.tableHeaderText}>{header}</Text>
+          ))}
+        </View>
+        {table.rows.map((row: string[], index: number) => (
+          <View key={index} style={styles.tableRow}>
+            {row.map((cell: string, cellIndex: number) => (
+              <Text key={cellIndex} style={styles.tableCell}>{cell}</Text>
+            ))}
+          </View>
+        ))}
+      </View>
+    );
   };
-
-  const isLastExample = exampleIndex === subcategory.examples.length - 1;
 
   return (
     <View style={styles.container}>
       <ScrollView 
-        ref={scrollViewRef}
         style={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>{currentExample.title}</Text>
-        <Text style={styles.description}>{currentExample.description}</Text>
+        <Text style={styles.title}>{category.title}</Text>
+        <Text style={styles.description}>{category.description}</Text>
 
-        <View style={styles.codeBlock}>
-          <View style={styles.codeHeader}>
-            <View style={styles.terminalDots}>
-              <View style={[styles.dot, { backgroundColor: '#FF5F56' }]} />
-              <View style={[styles.dot, { backgroundColor: '#FFBD2E' }]} />
-              <View style={[styles.dot, { backgroundColor: '#27C93F' }]} />
-            </View>
-            <Text style={styles.codeTitle}>Code Example</Text>
-            <View style={styles.codeActions}>
-              <TouchableOpacity 
-                onPress={copyCode} 
-                style={styles.actionButton}
-              >
-                <View style={[
-                  styles.copyButton,
-                  copied && { backgroundColor: language?.color || COLORS.primary }
-                ]}>
-                  <Ionicons 
-                    name={copied ? "checkmark" : "copy-outline"} 
-                    size={20} 
-                    color={copied ? COLORS.white : language?.color || COLORS.dark} 
-                  />
-                  <Text style={[
-                    styles.copyButtonText,
-                    { color: language?.color || COLORS.dark },
-                    copied && styles.copyButtonTextSuccess
-                  ]}>
-                    {copied ? 'Copied!' : 'Copy'}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={shareCode} style={styles.actionButton}>
-                <Ionicons name="share-outline" size={20} color={language.color} />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.codeContainer}>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={true}
-            >
-              <View style={styles.codeWrapper}>
-                <Text style={styles.code}>
-                  {currentExample.code.split('\n').map((line, index) => {
-                    const isComment = line.trim().startsWith('#');
-                    return (
-                      <Text key={index}>
-                        <Text style={[
-                          styles.codeLine,
-                          isComment && styles.codeComment
-                        ]}>
-                          {line}
-                        </Text>
-                        {'\n'}
-                      </Text>
-                    );
-                  })}
-                </Text>
-              </View>
-            </ScrollView>
-          </View>
-        </View>
+        {category.examples.map((example, index) => (
+          <View key={index} style={styles.exampleContainer}>
+            <Text style={styles.exampleTitle}>{example.title}</Text>
+            <Text style={styles.exampleDescription}>{example.description}</Text>
 
-        {currentExample.output && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Output</Text>
-            <View style={styles.outputBox}>
-              <View style={styles.outputHeader}>
+            <View style={styles.codeBlock}>
+              <View style={styles.codeHeader}>
                 <View style={styles.terminalDots}>
                   <View style={[styles.dot, { backgroundColor: '#FF5F56' }]} />
                   <View style={[styles.dot, { backgroundColor: '#FFBD2E' }]} />
                   <View style={[styles.dot, { backgroundColor: '#27C93F' }]} />
                 </View>
-                <Text style={styles.outputTitle}>Terminal</Text>
+                <Text style={styles.codeTitle}>Code Example</Text>
+                <View style={styles.codeActions}>
+                  <TouchableOpacity 
+                    onPress={() => copyCode(example.code)}
+                    style={styles.actionButton}
+                  >
+                    <View style={[
+                      styles.copyButton,
+                      copied && { backgroundColor: language?.color || COLORS.primary }
+                    ]}>
+                      <Ionicons 
+                        name={copied ? "checkmark" : "copy-outline"} 
+                        size={20} 
+                        color={copied ? COLORS.white : language?.color || COLORS.dark} 
+                      />
+                      <Text style={[
+                        styles.copyButtonText,
+                        { color: language?.color || COLORS.dark },
+                        copied && styles.copyButtonTextSuccess
+                      ]}>
+                        {copied ? 'Copied!' : 'Copy'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => shareCode(example.title, example.code)}
+                    style={styles.actionButton}
+                  >
+                    <Ionicons name="share-outline" size={20} color={language.color} />
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={styles.outputContent}>
-                <Text style={styles.outputText}>{currentExample.output}</Text>
+              <View style={styles.codeContainer}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+                  <View style={styles.codeWrapper}>
+                    <Text style={styles.code}>{example.code}</Text>
+                  </View>
+                </ScrollView>
               </View>
             </View>
+
+            {example.table && renderTable(example.table)}
+
+            <View style={styles.explanationSection}>
+              <Text style={styles.explanationTitle}>✅ Explanation:</Text>
+              <Text style={styles.explanation}>
+                {formatExplanation(example.explanation)}
+              </Text>
+            </View>
           </View>
-        )}
-
-        <View style={[styles.section, styles.explanationSection]}>
-          <Text style={styles.sectionTitle}>Explanation</Text>
-          <Text style={styles.explanation}>
-            {formatExplanation(currentExample.explanation)}
-          </Text>
-        </View>
+        ))}
       </ScrollView>
-
-      <View style={styles.footer}>
-        <TouchableOpacity 
-          style={[styles.navButton, exampleIndex === 0 && styles.navButtonDisabled]}
-          onPress={() => handleNavigation('prev')}
-          disabled={exampleIndex === 0}
-        >
-          <Ionicons name="chevron-back" size={20} color={language.color} />
-          <Text style={[styles.navText, { color: language.color }]}>Previous</Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.pageIndicator}>
-          {exampleIndex + 1}/{subcategory.examples.length}
-        </Text>
-        
-        <TouchableOpacity 
-          style={[
-            styles.navButton, 
-            isLastExample && styles.completeButton
-          ]}
-          onPress={() => handleNavigation('next')}
-        >
-          {isLastExample ? (
-            <>
-              <Text style={[styles.navText, styles.completeText]}>Complete</Text>
-              <Ionicons name="checkmark-circle" size={20} color={COLORS.white} />
-            </>
-          ) : (
-            <>
-              <Text style={[styles.navText, { color: language.color }]}>Next</Text>
-              <Ionicons name="chevron-forward" size={20} color={language.color} />
-            </>
-          )}
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -244,10 +172,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.dark,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   description: {
     fontSize: 16,
@@ -255,11 +183,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     lineHeight: 24,
   },
-  codeBlock: {
-    backgroundColor: '#1E1E1E',
+  exampleContainer: {
+    marginBottom: 32,
     borderRadius: 12,
-    marginBottom: 24,
-    overflow: 'hidden',
+    backgroundColor: COLORS.white,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.dark,
@@ -268,9 +195,31 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
+  },
+  exampleTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: COLORS.dark,
+    marginBottom: 8,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  exampleDescription: {
+    fontSize: 16,
+    color: `${COLORS.dark}90`,
+    marginBottom: 16,
+    lineHeight: 24,
+    paddingHorizontal: 16,
+  },
+  codeBlock: {
+    backgroundColor: '#1E1E1E',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   codeHeader: {
     flexDirection: 'row',
@@ -322,7 +271,6 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   codeContainer: {
-    maxHeight: undefined,
     minHeight: 100,
   },
   codeWrapper: {
@@ -335,109 +283,69 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     lineHeight: 20,
   },
-  codeLine: {
-    color: '#FFFFFF',
-  },
-  codeComment: {
-    color: '#6A9955', // Green color for comments
-    fontStyle: 'italic',
-  },
-  section: {
-    marginBottom: 24,
-  },
   explanationSection: {
-    marginBottom: 40,
+    padding: 16,
   },
-  sectionTitle: {
+  explanationTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.dark,
     marginBottom: 12,
   },
-  outputBox: {
-    backgroundColor: '#1E1E1E',
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  outputHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    backgroundColor: '#2D2D2D',
-  },
-  outputTitle: {
-    color: '#FFFFFF80',
-    fontSize: 13,
-    marginLeft: 12,
-  },
-  outputContent: {
-    padding: 16,
-  },
-  outputText: {
-    fontFamily: Platform.select({ ios: 'Menlo', android: 'monospace' }),
-    fontSize: 14,
-    color: '#FFFFFF',
-    lineHeight: 20,
-  },
   explanation: {
     fontSize: 16,
     color: COLORS.dark,
     lineHeight: 24,
-    marginBottom: 16,
   },
   boldText: {
-    fontWeight: '600',
+    fontWeight: '700',
+    color: COLORS.primary,
   },
   highlightText: {
-    color: COLORS.primary,
     backgroundColor: `${COLORS.primary}15`,
-    paddingHorizontal: 4,
+    color: COLORS.primary,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
     borderRadius: 4,
+    overflow: 'hidden',
   },
-  footer: {
+  table: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: `${COLORS.dark}20`,
+  },
+  tableHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: COLORS.white,
-    borderTopWidth: 1,
-    borderTopColor: `${COLORS.dark}10`,
+    backgroundColor: `${COLORS.primary}10`,
+    borderBottomWidth: 1,
+    borderBottomColor: `${COLORS.dark}20`,
   },
-  navButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 8,
-  },
-  navButtonDisabled: {
-    opacity: 0.5,
-  },
-  navText: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginHorizontal: 4,
-  },
-  pageIndicator: {
+  tableHeaderText: {
+    flex: 1,
+    padding: 12,
     fontSize: 14,
-    color: `${COLORS.dark}80`,
+    fontWeight: '600',
+    color: COLORS.dark,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: `${COLORS.dark}10`,
+  },
+  tableCell: {
+    flex: 1,
+    padding: 12,
+    fontSize: 14,
+    color: COLORS.dark,
   },
   errorText: {
     fontSize: 16,
     color: COLORS.dark,
     textAlign: 'center',
     marginTop: 20,
-  },
-  completeButton: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  completeText: {
-    color: COLORS.white,
-    fontWeight: '600',
   },
 });
 

@@ -1,17 +1,16 @@
 import { ProgrammingLanguage } from '../types';
 
 export const pythonData: ProgrammingLanguage = {
-  id: '1',
+  id: 'python',
   name: 'Python',
   description: 'A beginner-friendly programming language for everyone',
   color: '#3776AB',
-  icon: require('../../assets/languages/python.png'), // Updated path
+  icon: require('../../assets/languages/python.png'),
   categories: [
     {
       id: 'py_basics',
-
-      title: 'Basics & Syntax',
-      description: 'Core Python concepts and fundamentals',
+      title: 'Basic Concepts',
+      description: 'Learn Python fundamentals and syntax',
       icon: 'code-outline',
       subcategories: [
         {
@@ -607,7 +606,7 @@ print("%(name)s is %(age)d years old" % data)`,
     {
       id: 'py_control_flow',
       title: 'Control Flow',
-      description: 'Learn about making decisions in your code',
+      description: 'Master decision making in Python',
       icon: 'git-branch-outline',
       subcategories: [
         {
@@ -1121,8 +1120,8 @@ print(f"Swapped: {swapped}")`,
     {
       id: 'py_functions',
       title: 'Functions',
-      description: 'Learn about creating and using functions in Python',
-      icon: 'code-outline',
+      description: 'Work with functions and scope',
+      icon: 'cube-outline',
       subcategories: [
         {
           id: 'py_func_basics',
@@ -1343,79 +1342,176 @@ print(f"VIP discount (>100): \${get_discount(200, 'vip'):.2f}")
 print(f"Regular discount: \${get_discount(100, 'regular'):.2f}")`,
               output: "Min: 78, Max: 92, Avg: 86.60\n\nResults: [10, '-3 is negative', None]\n\nNew user discount: $10.00\nVIP discount (>100): $40.00\nRegular discount: $5.00",
               explanation: 'Functions can return **multiple values** using tuples. Use `None` for **no result**. **Early returns** make code clearer. Return types can vary based on conditions.'
+            },
+            {
+              id: 'py_return_1',
+              title: 'Basic Return Values',
+              description: 'Different ways to return values from functions',
+              code: `# Single return value
+def square(x):
+    return x * x
+
+# Multiple return values
+def get_coordinates():
+    return 5, 10
+
+# Return with conditions
+def get_status(age):
+    if age < 0:
+        return "Invalid age"
+    if age < 18:
+        return "Minor"
+    return "Adult"
+
+# Using the functions
+print(f"Square of 4: {square(4)}")
+
+x, y = get_coordinates()
+print(f"Coordinates: ({x}, {y})")
+
+print(f"Status: {get_status(25)}")
+print(f"Status: {get_status(-5)}")`,
+              output: "Square of 4: 16\nCoordinates: (5, 10)\nStatus: Adult\nStatus: Invalid age",
+              explanation: '**Return** statements exit the function and provide values. Functions can return **multiple values** using tuples. Return can be used for **early exits** with conditions.'
+            },
+            {
+              id: 'py_return_2',
+              title: 'Advanced Return Patterns',
+              description: 'Complex return value patterns',
+              code: `# Return different types
+def process_data(value):
+    if isinstance(value, str):
+        return len(value)
+    if isinstance(value, list):
+        return sum(value)
+    return None
+
+# Return functions
+def create_multiplier(factor):
+    def multiplier(x):
+        return x * factor
+    return multiplier
+
+# Return with default values
+def get_user_info(data=None):
+    if data is None:
+        return "Anonymous", 0
+    return data.get("name", "Unknown"), data.get("age", 0)
+
+# Using the functions
+print(f"Process string: {process_data('hello')}")
+print(f"Process list: {process_data([1, 2, 3])}")
+print(f"Process other: {process_data(None)}")
+
+double = create_multiplier(2)
+triple = create_multiplier(3)
+print(f"Double 5: {double(5)}")
+print(f"Triple 5: {triple(5)}")
+
+user1 = get_user_info()
+user2 = get_user_info({"name": "Alice", "age": 25})
+print(f"User1: {user1}")
+print(f"User2: {user2}")`,
+              output: "Process string: 5\nProcess list: 6\nProcess other: None\nDouble 5: 10\nTriple 5: 15\nUser1: ('Anonymous', 0)\nUser2: ('Alice', 25)",
+              explanation: 'Functions can return **different types** based on input. Functions can return **other functions** (closures). Use **default return values** for safety.'
             }
           ]
         },
         {
-          id: 'py_func_lambda',
+          id: 'py_lambda',
           title: 'Lambda Functions',
           description: 'Working with anonymous functions',
           examples: [
             {
-              id: 'py_func_lambda_1',
-              title: 'Lambda Function Basics',
+              id: 'py_lambda_1',
+              title: 'Basic Lambda Functions',
               description: 'Creating and using lambda functions',
               code: `# Basic lambda function
-square = lambda x: x ** 2
-cube = lambda x: x ** 3
-
+square = lambda x: x * x
 print(f"Square of 5: {square(5)}")
-print(f"Cube of 3: {cube(3)}")
 
-# Lambda with multiple arguments
-rectangle_area = lambda length, width: length * width
-print(f"Area of 4x5 rectangle: {rectangle_area(4, 5)}")
+# Lambda with multiple parameters
+add = lambda x, y: x + y
+print(f"3 + 4 = {add(3, 4)}")
 
-# Lambda with built-in functions
-numbers = [1, 2, 3, 4, 5]
-squared = list(map(lambda x: x**2, numbers))
+# Lambda in sorting
+points = [(1, 5), (2, 3), (3, 8), (2, 1)]
+sorted_points = sorted(points, key=lambda p: p[1])
+print(f"Sorted by y: {sorted_points}")
+
+# Lambda with filter
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 evens = list(filter(lambda x: x % 2 == 0, numbers))
-
-print(f"\\nOriginal numbers: {numbers}")
-print(f"Squared numbers: {squared}")
 print(f"Even numbers: {evens}")
 
-# Sorting with lambda
-points = [(1, 2), (3, 1), (0, 4)]
-sorted_by_y = sorted(points, key=lambda point: point[1])
-print(f"\\nSorted by y-coordinate: {sorted_by_y}")
+# Lambda with map
+squares = list(map(lambda x: x * x, numbers))
+print(f"Squares: {squares}")`,
+              output: "Square of 5: 25\n3 + 4 = 7\nSorted by y: [(2, 1), (2, 3), (1, 5), (3, 8)]\nEven numbers: [2, 4, 6, 8, 10]\nSquares: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
+              explanation: '**Lambda functions** are anonymous single-expression functions. Common with `map()`, `filter()`, and `sorted()`. Use for **simple operations**.'
+            },
+            {
+              id: 'py_lambda_2',
+              title: 'Advanced Lambda Patterns',
+              description: 'Complex uses of lambda functions',
+              code: `# Lambda in dictionaries
+operations = {
+    'add': lambda x, y: x + y,
+    'subtract': lambda x, y: x - y,
+    'multiply': lambda x, y: x * y,
+    'divide': lambda x, y: x / y if y != 0 else 'Error'
+}
 
-# Lambda in dictionary operations
-users = [
-    {"name": "Alice", "age": 25},
-    {"name": "Bob", "age": 30},
-    {"name": "Charlie", "age": 20}
+print(f"Add: {operations['add'](5, 3)}")
+print(f"Multiply: {operations['multiply'](4, 2)}")
+
+# Lambda with reduce
+from functools import reduce
+numbers = [1, 2, 3, 4, 5]
+product = reduce(lambda x, y: x * y, numbers)
+print(f"Product of numbers: {product}")
+
+# Lambda for custom sorting
+students = [
+    {'name': 'Alice', 'grade': 85},
+    {'name': 'Bob', 'grade': 92},
+    {'name': 'Charlie', 'grade': 78}
 ]
-sorted_users = sorted(users, key=lambda user: user["age"])
-print(f"\\nSorted users: {sorted_users}")`,
-              output: "Square of 5: 25\nCube of 3: 27\nArea of 4x5 rectangle: 20\n\nOriginal numbers: [1, 2, 3, 4, 5]\nSquared numbers: [1, 4, 9, 16, 25]\nEven numbers: [2, 4]\n\nSorted by y-coordinate: [(3, 1), (1, 2), (0, 4)]\n\nSorted users: [{'name': 'Charlie', 'age': 20}, {'name': 'Alice', 'age': 25}, {'name': 'Bob', 'age': 30}]",
-              explanation: '**Lambda functions** are anonymous single-expression functions. Common with `map()`, `filter()`, and `sorted()`. Use for simple operations and as function arguments.'
+
+sorted_students = sorted(
+    students,
+    key=lambda s: (-s['grade'], s['name'])
+)
+print("\\nSorted students:")
+for student in sorted_students:
+    print(f"{student['name']}: {student['grade']}")`,
+              output: "Add: 8\nMultiply: 8\nProduct of numbers: 120\n\nSorted students:\nBob: 92\nAlice: 85\nCharlie: 78",
+              explanation: 'Lambda functions can be stored in **data structures**. Use with `reduce()` for **accumulation**. Complex sorting with **multiple criteria**.'
             }
           ]
         },
         {
-          id: 'py_func_scope',
-          title: 'Scope & Variables',
-          description: 'Understanding variable scope in functions',
+          id: 'py_variables',
+          title: 'Variable Scope',
+          description: 'Understanding variable scope and lifetime',
           examples: [
             {
-              id: 'py_func_scope_1',
-              title: 'Variable Scope',
-              description: 'Local and global variable scope',
-              code: `# Global and local variables
-global_var = "I'm global"
+              id: 'py_scope_1',
+              title: 'Variable Scope Basics',
+              description: 'Local and global scope',
+              code: `# Global variable
+message = "Global message"
 
-def test_scope():
-    local_var = "I'm local"
-    print(f"Inside function - Global: {global_var}")
-    print(f"Inside function - Local: {local_var}")
+def print_message():
+    # Local variable
+    message = "Local message"
+    print(f"Inside function: {message}")
 
-test_scope()
-print(f"Outside function - Global: {global_var}")
-# This would raise an error:
-# print(local_var)
+print(f"Before function: {message}")
+print_message()
+print(f"After function: {message}")
 
-# Modifying global variables
+# Modifying global variable
 counter = 0
 
 def increment():
@@ -1427,29 +1523,40 @@ increment()
 increment()
 print(f"Final counter: {counter}")
 
-# Nonlocal variables
+# Local variables in different functions
+def func1():
+    x = 1
+    print(f"func1 x: {x}")
+
+def func2():
+    x = 2
+    print(f"func2 x: {x}")
+
+func1()
+func2()`,
+              output: "Before function: Global message\nInside function: Local message\nAfter function: Global message\nCounter: 1\nCounter: 2\nFinal counter: 2\nfunc1 x: 1\nfunc2 x: 2",
+              explanation: '**Local variables** are only accessible within their function. Use `global` keyword to modify global variables. Each function has its own **local scope**.'
+            },
+            {
+              id: 'py_scope_2',
+              title: 'Advanced Scope Concepts',
+              description: 'Nested functions and nonlocal variables',
+              code: `# Nested function scope
 def outer():
     x = "outer"
     
     def inner():
-        nonlocal x
-        x = "modified"
+        x = "inner"
         print(f"Inner x: {x}")
     
     print(f"Before inner - x: {x}")
     inner()
     print(f"After inner - x: {x}")
 
-outer()`,
-              output: "Inside function - Global: I'm global\nInside function - Local: I'm local\nOutside function - Global: I'm global\nCounter: 1\nCounter: 2\nFinal counter: 2\nBefore inner - x: outer\nInner x: modified\nAfter inner - x: modified",
-              explanation: '**Local variables** are only accessible within their function. Use `global` to modify global variables. `nonlocal` accesses variables in the outer function scope.'
-            },
-            {
-              id: 'py_func_scope_2',
-              title: 'Advanced Scope Concepts',
-              description: 'Closures and variable lifetime',
-              code: `# Closure example
-def create_counter():
+outer()
+
+# Nonlocal variables
+def counter_factory():
     count = 0
     
     def increment():
@@ -1457,41 +1564,46 @@ def create_counter():
         count += 1
         return count
     
-    return increment
-
-counter = create_counter()
-print(f"Count 1: {counter()}")
-print(f"Count 2: {counter()}")
-print(f"Count 3: {counter()}")
-
-# Function factory with parameters
-def create_multiplier(factor):
-    def multiplier(x):
-        return x * factor
-    return multiplier
-
-double = create_multiplier(2)
-triple = create_multiplier(3)
-
-print(f"\\nDouble 5: {double(5)}")
-print(f"Triple 5: {triple(5)}")
-
-# Maintaining state
-def create_accumulator():
-    values = []
+    def decrement():
+        nonlocal count
+        count -= 1
+        return count
     
-    def add(x):
-        values.append(x)
-        return sum(values)
-    
-    return add
+    return increment, decrement
 
-acc = create_accumulator()
-print(f"\\nAdd 5: {acc(5)}")
-print(f"Add 3: {acc(3)}")
-print(f"Add 2: {acc(2)}")`,
-              output: "Count 1: 1\nCount 2: 2\nCount 3: 3\n\nDouble 5: 10\nTriple 5: 15\n\nAdd 5: 5\nAdd 3: 8\nAdd 2: 10",
-              explanation: '**Closures** maintain access to variables in their outer scope. Function factories create **specialized functions**. Use closures to maintain **state between calls**.'
+inc, dec = counter_factory()
+print(f"Increment: {inc()}")
+print(f"Increment: {inc()}")
+print(f"Decrement: {dec()}")
+
+# Closure with state
+def create_account(initial_balance):
+    balance = initial_balance
+    
+    def check_balance():
+        return balance
+    
+    def deposit(amount):
+        nonlocal balance
+        balance += amount
+        return balance
+    
+    def withdraw(amount):
+        nonlocal balance
+        if amount <= balance:
+            balance -= amount
+            return balance
+        return "Insufficient funds"
+    
+    return check_balance, deposit, withdraw
+
+check, deposit, withdraw = create_account(100)
+print(f"\\nInitial balance: {check()}")
+print(f"After deposit: {deposit(50)}")
+print(f"After withdrawal: {withdraw(30)}")
+print(f"Final balance: {check()}")`,
+              output: "Before inner - x: outer\nInner x: inner\nAfter inner - x: outer\nIncrement: 1\nIncrement: 2\nDecrement: 1\n\nInitial balance: 100\nAfter deposit: 150\nAfter withdrawal: 120\nFinal balance: 120",
+              explanation: '**Nested functions** have access to outer function variables. Use `nonlocal` to modify outer function variables. **Closures** maintain state between calls.'
             }
           ]
         }
@@ -1763,34 +1875,69 @@ for item in multi_yield():
       icon: 'warning-outline',
       subcategories: [
         {
-          id: 'py_try_except',
-          title: 'Try-Except Blocks',
-          description: 'Handle runtime errors gracefully',
+          id: 'py_try_except_1',
+          title: 'Basic Try-Except',
+          description: 'Handling common exceptions',
           examples: [
             {
-              id: 'py_error_1',
-              title: 'Basic Error Handling',
-              description: 'Learn how to catch and handle exceptions',
-              code: `# Division by zero error handling
-def divide_numbers(a, b):
+              id: 'py_try_except_basic',
+              title: 'Basic Try-Except',
+              description: 'Handling common exceptions',
+              code: `# Basic error handling
+def divide(a, b):
     try:
         result = a / b
         return result
     except ZeroDivisionError:
-        return "Cannot divide by zero!"
+        return "Cannot divide by zero"
     except TypeError:
-        return "Please provide numbers only!"
+        return "Please provide numbers only"
 
-# Test the function
-print(divide_numbers(10, 2))
-print(divide_numbers(10, 0))
-print(divide_numbers(10, "hello"))`,
-              output: "5.0\nCannot divide by zero!\nPlease provide numbers only!",
-              explanation: 'The `try-except` block is used to handle errors gracefully. The code inside the `try` block is attempted, and if an error occurs, the corresponding `except` block handles it. **Exception handling** is crucial for writing robust programs that can handle unexpected situations.'
-            },
+# Testing error handling
+print(f"10 / 2 = {divide(10, 2)}")
+print(f"10 / 0 = {divide(10, 0)}")
+print(f"10 / 'a' = {divide(10, 'a')}")`,
+              output: "10 / 2 = 5.0\n10 / 0 = Cannot divide by zero\n10 / 'a' = Please provide numbers only",
+              explanation: 'Use `try-except` to catch specific **exceptions**. Handle **multiple exception types** separately.'
+            }
+          ]
+        },
+        {
+          id: 'py_finally_1',
+          title: 'Finally Clause',
+          description: 'Ensuring cleanup with finally',
+          examples: [
             {
-              id: 'py_error_2',
-              title: 'Custom Exceptions',
+              id: 'py_finally_basic',
+              title: 'Finally Clause Usage',
+              description: 'Using finally for cleanup',
+              code: `# File handling with finally
+def read_file(filename):
+    file = None
+    try:
+        file = open(filename, 'r')
+        return file.read()
+    except FileNotFoundError:
+        return "File not found"
+    finally:
+        if file:
+            file.close()
+            print("File closed successfully")
+
+print(read_file("nonexistent.txt"))`,
+              output: "File not found\nFile closed successfully",
+              explanation: '`finally` block **always executes**, regardless of exceptions. Use for **cleanup operations**.'
+            }
+          ]
+        },
+        {
+          id: 'py_custom_except_1',
+          title: 'Custom Exceptions',
+          description: 'Creating custom exception classes',
+          examples: [
+            {
+              id: 'py_custom_except_basic',
+              title: 'Custom Exception Classes',
               description: 'Creating and using custom exceptions',
               code: `# Custom exception class
 class ValidationError(Exception):
@@ -1804,72 +1951,59 @@ def validate_age(age):
         raise ValidationError("Age must be a number", "TYPE_ERROR")
     if age < 0:
         raise ValidationError("Age cannot be negative", "VALUE_ERROR")
-    if age > 150:
-        raise ValidationError("Age seems unrealistic", "RANGE_ERROR")
+    return "Age is valid"
 
-# Test the validation
-test_ages = [25, -5, "not_a_number", 200]
-
-for age in test_ages:
+# Testing custom exceptions
+def test_age(age):
     try:
-        validate_age(age)
-        print(f"Age {age} is valid")
+        result = validate_age(age)
+        print(f"Age {age}: {result}")
     except ValidationError as e:
-        print(f"Error validating {age}: {e.message} (Code: {e.code})")
-    except Exception as e:
-        print(f"Unexpected error: {e}")`,
-              output: "Age 25 is valid\nError validating -5: Age cannot be negative (Code: VALUE_ERROR)\nError validating not_a_number: Age must be a number (Code: TYPE_ERROR)\nError validating 200: Age seems unrealistic (Code: RANGE_ERROR)",
-              explanation: '**Custom exceptions** help create meaningful error messages. Use `raise` to throw exceptions. The `super().__init__()` call ensures proper exception initialization. Multiple `except` blocks handle different error types.'
-            },
+        print(f"Error for age {age}: {e.message} (Code: {e.code})")
+
+test_age(25)
+test_age(-5)
+test_age("invalid")`,
+              output: "Age 25: Age is valid\nError for age -5: Age cannot be negative (Code: VALUE_ERROR)\nError for age invalid: Age must be a number (Code: TYPE_ERROR)",
+              explanation: 'Create custom exceptions by inheriting from `Exception`. Add **custom attributes** like error codes.'
+            }
+          ]
+        },
+        {
+          id: 'py_debug_1',
+          title: 'Debugging Techniques',
+          description: 'Using print and logging for debugging',
+          examples: [
             {
-              id: 'py_error_3',
-              title: 'Context Managers for Error Handling',
-              description: 'Using context managers for resource management',
-              code: `from contextlib import contextmanager
-import sys
-from typing import TextIO
+              id: 'py_debug_basic',
+              title: 'Print and Logging',
+              description: 'Basic debugging techniques',
+              code: `import logging
 
-@contextmanager
-def managed_file(filename: str) -> TextIO:
-    """Manage file operations with error handling."""
-    file = None
-    try:
-        file = open(filename, 'w')
-        yield file
-    except IOError as e:
-        print(f"Error during file operation: {e}")
-    finally:
-        if file:
-            file.close()
-            print(f"File {filename} closed")
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
-@contextmanager
-def error_handler(operation_name: str):
-    """General purpose error handler."""
+def calculate_average(numbers):
+    logging.debug(f"Input numbers: {numbers}")
     try:
-        yield
+        total = sum(numbers)
+        logging.debug(f"Sum calculated: {total}")
+        average = total / len(numbers)
+        logging.info(f"Average calculated: {average}")
+        return average
     except Exception as e:
-        print(f"Error during {operation_name}: {str(e)}")
-        # Log error, send notification, etc.
-    else:
-        print(f"{operation_name} completed successfully")
+        logging.error(f"Error: {str(e)}")
+        return None
 
-# Using the context managers
-with error_handler("file writing"):
-    with managed_file("example.txt") as f:
-        f.write("Hello, World!")
-        f.write("\\nMore content")
-
-# Nested error handling
-with error_handler("data processing"):
-    data = [1, 2, 0, 4]
-    results = []
-    for num in data:
-        with error_handler(f"processing number {num}"):
-            results.append(10 / num)
-    print(f"Results: {results}")`,
-              output: "file writing completed successfully\nFile example.txt closed\ndata processing completed successfully\nprocessing number 1 completed successfully\nprocessing number 2 completed successfully\nError during processing number 0: division by zero\nprocessing number 4 completed successfully\nResults: [10.0, 5.0, 2.5]",
-              explanation: '**Context managers** provide clean setup and teardown of resources. The `@contextmanager` decorator simplifies creating context managers. `try`/`except`/`finally` ensures proper resource cleanup. Nested context managers handle complex error scenarios.'
+# Test with different inputs
+print("Testing with valid numbers:")
+result = calculate_average([1, 2, 3, 4, 5])
+print(f"Result: {result}")`,
+              output: "2024-01-24 12:34:56,789 - DEBUG - Input numbers: [1, 2, 3, 4, 5]\n2024-01-24 12:34:56,789 - DEBUG - Sum calculated: 15\n2024-01-24 12:34:56,789 - INFO - Average calculated: 3.0\nTesting with valid numbers:\nResult: 3.0",
+              explanation: 'Use `print()` for quick debugging. `logging` provides **different levels** (DEBUG, INFO, ERROR).'
             }
           ]
         }
@@ -1883,14 +2017,14 @@ with error_handler("data processing"):
       subcategories: [
         {
           id: 'py_classes',
-          title: 'Classes and Objects',
+          title: 'Classes & Objects',
           description: 'Understanding object-oriented programming basics',
           examples: [
             {
               id: 'py_class_1',
-              title: 'Creating Classes',
-              description: 'Learn how to create and use classes',
-              code: `# Define a simple class
+              title: 'Basic Classes',
+              description: 'Creating and using basic classes',
+              code: `# Basic class definition
 class Dog:
     def __init__(self, name, age):
         self.name = name
@@ -1898,70 +2032,198 @@ class Dog:
     
     def bark(self):
         return f"{self.name} says Woof!"
+
+# Creating and using objects
+dog1 = Dog("Buddy", 5)
+dog2 = Dog("Max", 3)
+
+print(f"{dog1.name} is {dog1.age} years old")
+print(dog1.bark())
+print(f"{dog2.name} is {dog2.age} years old")
+print(dog2.bark())`,
+              output: "Buddy is 5 years old\nBuddy says Woof!\nMax is 3 years old\nMax says Woof!",
+              explanation: 'Create classes using the `class` keyword. Use `__init__` for initialization. Create **objects** (instances) from classes.'
+            },
+            {
+              id: 'py_class_2',
+              title: 'Advanced Class Features',
+              description: 'Working with class methods and string representation',
+              code: `class Book:
+    def __init__(self, title, author, pages):
+        self.title = title
+        self.author = author
+        self.pages = pages
+        self.current_page = 1
+    
+    def __str__(self):
+        return f"{self.title} by {self.author}"
+    
+    def __len__(self):
+        return self.pages
+    
+    def read(self, pages):
+        self.current_page = min(self.current_page + pages, self.pages)
+        return f"Now on page {self.current_page} of {self.pages}"
+
+# Using special methods
+book = Book("Python Basics", "John Smith", 200)
+print(str(book))  # Uses __str__
+print(f"Length: {len(book)} pages")  # Uses __len__
+print(book.read(50))
+print(book.read(200))`,
+              output: "Python Basics by John Smith\nLength: 200 pages\nNow on page 51 of 200\nNow on page 200 of 200",
+              explanation: 'Special methods like `__str__` and `__len__` customize object behavior. They\'re called by built-in functions `str()` and `len()`.'
+            },
+            {
+              id: 'py_class_3',
+              title: 'Objects and Methods',
+              description: 'Understanding objects and their methods',
+              code: `# Simple class with multiple methods
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    
+    def area(self):
+        return self.width * self.height
+    
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+    
+    def describe(self):
+        return f"Rectangle: {self.width}x{self.height}"
+
+# Creating and using objects
+rect1 = Rectangle(5, 3)
+rect2 = Rectangle(4, 4)
+
+# Using object methods
+print(rect1.describe())
+print(f"Area: {rect1.area()}")
+print(f"Perimeter: {rect1.perimeter()}")
+
+print(f"\\n{rect2.describe()}")
+print(f"Area: {rect2.area()}")
+print(f"Perimeter: {rect2.perimeter()}")`,
+              output: "Rectangle: 5x3\nArea: 15\nPerimeter: 16\n\nRectangle: 4x4\nArea: 16\nPerimeter: 16",
+              explanation: 'Objects can have multiple **methods** that work with their attributes. Each object maintains its own **state** (width and height).'
+            }
+          ]
+        },
+        {
+          id: 'py_variables',
+          title: 'Instance & Class Variables',
+          description: 'Understanding different types of class variables',
+          examples: [
+            {
+              id: 'py_vars_1',
+              title: 'Instance and Class Variables',
+              description: 'Working with different variable scopes in classes',
+              code: `class Student:
+    # Class variable
+    school_name = "Python High"
+    
+    def __init__(self, name, grade):
+        # Instance variables
+        self.name = name
+        self.grade = grade
     
     def get_info(self):
-        return f"{self.name} is {self.age} years old"
+        return f"{self.name} at {self.school_name}"
 
-# Create objects
-buddy = Dog("Buddy", 5)
-max = Dog("Max", 3)
+# Create students
+student1 = Student("Alice", 95)
+student2 = Student("Bob", 87)
 
-# Use the objects
-print(buddy.bark())
-print(max.get_info())`,
-              output: "Buddy says Woof!\nMax is 3 years old",
-              explanation: 'Classes are blueprints for creating **objects**. The `__init__` method is a special **constructor** that initializes new objects. `self` refers to the current instance of the class. **Methods** like `bark()` define the behavior of objects.'
-            }
-          ]
-        },
-        {
-          id: 'py_inheritance',
-          title: 'Inheritance',
-          description: 'Learn about class inheritance and polymorphism',
-          examples: [
+print(f"School: {Student.school_name}")
+print(student1.get_info())
+print(student2.get_info())
+
+# Change class variable
+Student.school_name = "Python Academy"
+print(f"\\nAfter school name change:")
+print(student1.get_info())
+print(student2.get_info())`,
+              output: "School: Python High\nAlice at Python High\nBob at Python High\n\nAfter school name change:\nAlice at Python Academy\nBob at Python Academy",
+              explanation: '**Class variables** are shared by all instances. **Instance variables** are unique to each object.'
+            },
             {
-              id: 'py_inherit_1',
-              title: 'Class Inheritance',
-              description: 'Understanding inheritance in Python',
-              code: `# Parent class
-class Animal:
+              id: 'py_vars_2',
+              title: 'Advanced Variable Concepts',
+              description: 'Understanding variable name mangling and class attributes',
+              code: `class Counter:
+    count = 0  # Class variable
+    
     def __init__(self, name):
         self.name = name
+        Counter.count += 1
+        self.__id = Counter.count  # Name mangling
     
-    def speak(self):
-        pass
+    @classmethod
+    def get_total(cls):
+        return cls.count
+    
+    def get_id(self):
+        return self.__id
 
-# Child classes
-class Dog(Animal):
-    def speak(self):
-        return f"{self.name} says Woof!"
+# Using class and instance variables
+counter1 = Counter("First")
+counter2 = Counter("Second")
 
-class Cat(Animal):
-    def speak(self):
-        return f"{self.name} says Meow!"
+print(f"Counter 1 ID: {counter1.get_id()}")
+print(f"Counter 2 ID: {counter2.get_id()}")
+print(f"Total counters: {Counter.get_total()}")
 
-# Create objects
-dog = Dog("Buddy")
-cat = Cat("Whiskers")
-
-# Test polymorphism
-animals = [dog, cat]
-for animal in animals:
-    print(animal.speak())`,
-              output: "Buddy says Woof!\nWhiskers says Meow!",
-              explanation: '**Inheritance** allows a class to inherit attributes and methods from another class. The `Animal` class is the **parent class**, while `Dog` and `Cat` are **child classes**. This demonstrates **polymorphism** where different classes can implement the same method differently.'
+# Demonstrate name mangling
+try:
+    print(counter1.__id)  # This will fail
+except AttributeError:
+    print("Cannot access private variable directly")`,
+              output: "Counter 1 ID: 1\nCounter 2 ID: 2\nTotal counters: 2\nCannot access private variable directly",
+              explanation: '**Name mangling** (`__id`) provides privacy. **Class methods** can access class variables. Class variables track data across all instances.'
             }
           ]
         },
         {
-          id: 'py_oop_advanced',
-          title: 'Advanced OOP Concepts',
-          description: 'Advanced object-oriented programming features',
+          id: 'py_methods',
+          title: 'Methods',
+          description: 'Understanding different types of methods',
           examples: [
             {
-              id: 'py_oop_1',
-              title: 'Properties and Descriptors',
-              description: 'Using properties and descriptors for attribute control',
+              id: 'py_methods_1',
+              title: 'Instance, Class, and Static Methods',
+              description: 'Different types of methods in Python classes',
+              code: `class Calculator:
+    @staticmethod
+    def add(x, y):
+        return x + y
+    
+    @classmethod
+    def multiply_by_two(cls, x):
+        return cls.multiply(x, 2)
+    
+    @classmethod
+    def multiply(cls, x, y):
+        return x * y
+    
+    def divide(self, x, y):
+        if y != 0:
+            return x / y
+        return "Cannot divide by zero"
+
+# Using different methods
+calc = Calculator()
+
+print(f"Static method: 2 + 3 = {Calculator.add(2, 3)}")
+print(f"Class method: 4 × 2 = {Calculator.multiply_by_two(4)}")
+print(f"Instance method: 6 ÷ 2 = {calc.divide(6, 2)}")`,
+              output: "Static method: 2 + 3 = 5\nClass method: 4 × 2 = 8\nInstance method: 6 ÷ 2 = 3.0",
+              explanation: '**Static methods** don\'t access class/instance. **Class methods** access class but not instance. **Instance methods** access instance data.'
+            },
+            {
+              id: 'py_methods_2',
+              title: 'Property Decorators',
+              description: 'Using property decorators for getters and setters',
               code: `class Temperature:
     def __init__(self, celsius=0):
         self._celsius = celsius
@@ -1978,7 +2240,7 @@ for animal in animals:
     
     @property
     def fahrenheit(self):
-        return (self.celsius * 9/5) + 32
+        return self._celsius * 9/5 + 32
     
     @fahrenheit.setter
     def fahrenheit(self, value):
@@ -1989,129 +2251,213 @@ temp = Temperature(25)
 print(f"Celsius: {temp.celsius}°C")
 print(f"Fahrenheit: {temp.fahrenheit}°F")
 
-# Setting values
 temp.fahrenheit = 100
-print(f"New Celsius: {temp.celsius}°C")
+print(f"\\nAfter setting Fahrenheit to 100°F:")
+print(f"Celsius: {temp.celsius}°C")
 
-# Validation
 try:
     temp.celsius = -300
 except ValueError as e:
-    print(f"Error: {e}")`,
-              output: "Celsius: 25°C\nFahrenheit: 77.0°F\nNew Celsius: 37.77777777777778°C\nError: Temperature below absolute zero!",
-              explanation: '**Properties** provide getter/setter functionality with the `@property` decorator. They enable **data validation** and **computed attributes**. Properties help maintain **encapsulation** while providing a clean interface.'
-            },
+    print(f"\\nError: {str(e)}")`,
+              output: "Celsius: 25°C\nFahrenheit: 77.0°F\n\nAfter setting Fahrenheit to 100°F:\nCelsius: 37.77777777777778°C\n\nError: Temperature below absolute zero!",
+              explanation: '`@property` creates **getter methods**. `@name.setter` creates **setter methods**. Properties enable **data validation** and **computed attributes**.'
+            }
+          ]
+        },
+        {
+          id: 'py_inheritance',
+          title: 'Inheritance & Polymorphism',
+          description: 'Understanding inheritance and polymorphism concepts',
+          examples: [
             {
-              id: 'py_oop_2',
-              title: 'Multiple Inheritance and Mixins',
-              description: 'Understanding multiple inheritance and mixin patterns',
-              code: `class LoggerMixin:
-    def log(self, message):
-        print(f"[LOG] {self.__class__.__name__}: {message}")
-
-class JSONSerializableMixin:
-    def to_json(self):
-        import json
-        return json.dumps(self.__dict__)
-
+              id: 'py_inherit_1',
+              title: 'Basic Inheritance',
+              description: 'Creating and using inherited classes',
+              code: `# Parent class
 class Animal:
     def __init__(self, name):
         self.name = name
     
     def speak(self):
-        pass
+        return "Some sound"
 
-class Pet:
-    def __init__(self, owner):
-        self.owner = owner
-    
-    def get_owner(self):
-        return f"Owned by {self.owner}"
-
-class Dog(Animal, Pet, LoggerMixin, JSONSerializableMixin):
-    def __init__(self, name, owner, breed):
-        Animal.__init__(self, name)
-        Pet.__init__(self, owner)
-        self.breed = breed
-    
+# Child classes
+class Dog(Animal):
     def speak(self):
-        self.log(f"{self.name} says Woof!")
-        return "Woof!"
+        return f"{self.name} says Woof!"
 
-# Using the class
-dog = Dog("Rex", "Alice", "Labrador")
+class Cat(Animal):
+    def speak(self):
+        return f"{self.name} says Meow!"
+
+# Using inheritance
+dog = Dog("Buddy")
+cat = Cat("Whiskers")
+
 print(dog.speak())
-print(dog.get_owner())
-print(f"JSON: {dog.to_json()}")
+print(cat.speak())
 
 # Check inheritance
-print(f"\nMethod Resolution Order:")
-for cls in Dog.__mro__:
-    print(f"- {cls.__name__}")`,
-              output: "[LOG] Dog: Rex says Woof!\nWoof!\nOwned by Alice\nJSON: {\"name\": \"Rex\", \"owner\": \"Alice\", \"breed\": \"Labrador\"}\n\nMethod Resolution Order:\n- Dog\n- Animal\n- Pet\n- LoggerMixin\n- JSONSerializableMixin\n- object",
-              explanation: '**Multiple inheritance** combines features from multiple classes. **Mixins** are classes that provide additional functionality. The **Method Resolution Order (MRO)** determines how Python resolves method calls in multiple inheritance.'
+print(f"\\nIs dog an Animal? {isinstance(dog, Animal)}")
+print(f"Is cat an Animal? {isinstance(cat, Animal)}")`,
+              output: "Buddy says Woof!\nWhiskers says Meow!\n\nIs dog an Animal? True\nIs cat an Animal? True",
+              explanation: '**Inheritance** allows classes to inherit attributes and methods. **Polymorphism** lets child classes override parent methods.'
             },
             {
-              id: 'py_oop_3',
-              title: 'Metaclasses and Class Decorators',
-              description: 'Advanced class creation and modification',
-              code: `# Metaclass example
-class Singleton(type):
-    _instances = {}
+              id: 'py_inherit_2',
+              title: 'Multiple Inheritance',
+              description: 'Working with multiple inheritance and super()',
+              code: `class Vehicle:
+    def __init__(self, brand):
+        self.brand = brand
     
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super().__call__(*args, **kwargs)
-        return cls._instances[cls]
+    def start(self):
+        return f"{self.brand} is starting"
 
-# Class decorator example
-def validate_attributes(cls):
-    original_init = cls.__init__
+class Electric:
+    def charge(self):
+        return "Charging battery"
+
+class ElectricCar(Vehicle, Electric):
+    def __init__(self, brand, battery_size):
+        super().__init__(brand)
+        self.battery_size = battery_size
     
-    def new_init(self, *args, **kwargs):
-        original_init(self, *args, **kwargs)
-        for key, value in self.__dict__.items():
-            if hasattr(self, f'validate_{key}'):
-                validator = getattr(self, f'validate_{key}')
-                if not validator(value):
-                    raise ValueError(f"Invalid value for {key}: {value}")
-    
-    cls.__init__ = new_init
-    return cls
+    def info(self):
+        return f"{self.brand} with {self.battery_size}kWh battery"
 
-# Using metaclass
-class Database(metaclass=Singleton):
-    def __init__(self, host):
-        self.host = host
+# Using multiple inheritance
+tesla = ElectricCar("Tesla", 75)
+print(tesla.start())
+print(tesla.charge())
+print(tesla.info())
 
-# Using class decorator
-@validate_attributes
-class User:
-    def __init__(self, name, age):
+# Check inheritance chain
+print(f"\\nBase classes: {ElectricCar.__bases__}")`,
+              output: "Tesla is starting\nCharging battery\nTesla with 75kWh battery\n\nBase classes: (<class '__main__.Vehicle'>, <class '__main__.Electric'>)",
+              explanation: '**Multiple inheritance** allows inheriting from several classes. `super()` calls parent class methods. Use **method resolution order** (MRO) for multiple inheritance.'
+            },
+            {
+              id: 'py_inherit_3',
+              title: 'Simple Polymorphism',
+              description: 'Understanding polymorphism with shapes',
+              code: `class Shape:
+    def __init__(self, name):
         self.name = name
-        self.age = age
     
-    def validate_age(self, age):
-        return 0 <= age <= 150
+    def area(self):
+        return 0
     
-    def validate_name(self, name):
-        return bool(name.strip())
+    def describe(self):
+        return f"I am a {self.name}"
 
-# Testing Singleton
-db1 = Database('localhost')
-db2 = Database('127.0.0.1')
-print(f"Same instance: {db1 is db2}")
-print(f"Host: {db1.host}")  # Still 'localhost'
+class Circle(Shape):
+    def __init__(self, radius):
+        super().__init__("Circle")
+        self.radius = radius
+    
+    def area(self):
+        return 3.14 * self.radius * self.radius
 
-# Testing validation
+class Square(Shape):
+    def __init__(self, side):
+        super().__init__("Square")
+        self.side = side
+    
+    def area(self):
+        return self.side * self.side
+
+# Create different shapes
+shapes = [
+    Circle(3),
+    Square(4),
+    Circle(2)
+]
+
+# Polymorphic behavior
+for shape in shapes:
+    print(shape.describe())
+    print(f"Area: {shape.area()}")
+    print()`,
+              output: "I am a Circle\nArea: 28.26\n\nI am a Square\nArea: 16\n\nI am a Circle\nArea: 12.56\n",
+              explanation: '**Polymorphism** allows different classes to be treated the same way. Each shape calculates its area differently, but we can call `area()` on any shape.'
+            }
+          ]
+        },
+        {
+          id: 'py_encapsulation',
+          title: 'Encapsulation & Abstraction',
+          description: 'Understanding data hiding and abstraction',
+          examples: [
+            {
+              id: 'py_encap_1',
+              title: 'Basic Encapsulation',
+              description: 'Private attributes and properties',
+              code: `class BankAccount:
+    def __init__(self, balance):
+        self._balance = balance  # Protected
+        self.__transactions = []  # Private
+    
+    @property
+    def balance(self):
+        return self._balance
+    
+    def deposit(self, amount):
+        if amount > 0:
+            self._balance += amount
+            self.__transactions.append(f"Deposit: {amount}")
+            return True
+        return False
+
+    def get_transaction_count(self):
+        return len(self.__transactions)
+
+# Using encapsulation
+account = BankAccount(1000)
+print(f"Initial balance: {account.balance}")
+account.deposit(500)
+print(f"New balance: {account.balance}")
+print(f"Transaction count: {account.get_transaction_count()}")`,
+              output: "Initial balance: 1000\nNew balance: 1500\nTransaction count: 1",
+              explanation: 'Use **single underscore** for protected attributes. Use **double underscore** for private attributes. `@property` creates **getter methods**.'
+            },
+            {
+              id: 'py_encap_2',
+              title: 'Abstract Classes',
+              description: 'Working with abstract base classes',
+              code: `from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self):
+        pass
+    
+    @abstractmethod
+    def perimeter(self):
+        pass
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    
+    def area(self):
+        return self.width * self.height
+    
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
+# Using abstract class
 try:
-    user = User("Alice", 25)
-    print(f"Valid user: {user.name}, {user.age}")
-    invalid_user = User("", -5)
-except ValueError as e:
-    print(f"Validation error: {e}")`,
-              output: "Same instance: True\nHost: localhost\nValid user: Alice, 25\nValidation error: Invalid value for name: ",
-              explanation: '**Metaclasses** customize class creation. **Class decorators** modify classes after creation. **Singleton** ensures only one instance exists. The `validate_attributes` decorator adds automatic validation.'
+    shape = Shape()  # This will fail
+except TypeError as e:
+    print("Cannot instantiate abstract class")
+
+rect = Rectangle(5, 3)
+print(f"Rectangle area: {rect.area()}")
+print(f"Rectangle perimeter: {rect.perimeter()}")`,
+              output: "Cannot instantiate abstract class\nRectangle area: 15\nRectangle perimeter: 16",
+              explanation: '**Abstract classes** define interfaces. `@abstractmethod` requires implementation in child classes. Cannot create instances of abstract classes.'
             }
           ]
         }
@@ -2190,247 +2536,6 @@ for mode in modes:
         print("File not found!")`,
               output: "\nOpening with mode 'r':\nFile object: <_io.TextIOWrapper name='example.txt' mode='r' encoding='utf-8'>\nReadable: True\nWritable: False\n...",
               explanation: '**Context managers** ensure proper resource cleanup. Different file **modes** control read/write access. Use `wb` mode for **binary files**. The `@contextmanager` decorator creates custom context managers.'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'py_regex',
-      title: 'Regular Expressions',
-      description: 'Master pattern matching and text processing',
-      icon: 'search-outline',
-      subcategories: [
-        {
-          id: 'py_regex_basics',
-          title: 'Regex Basics',
-          description: 'Learn fundamental regular expression patterns',
-          examples: [
-            {
-              id: 'py_regex_1',
-              title: 'Pattern Matching',
-              description: 'Basic pattern matching with regular expressions',
-              code: `import re
-
-# Basic pattern matching
-text = "Contact us at: info@example.com or support@example.com"
-email_pattern = r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'
-
-# Find all matches
-emails = re.findall(email_pattern, text)
-print("Found emails:", emails)
-
-# Search and replace
-new_text = re.sub(email_pattern, '[EMAIL]', text)
-print("\\nRedacted text:", new_text)`,
-              output: "Found emails: ['info@example.com', 'support@example.com']\nRedacted text: Contact us at: [EMAIL] or [EMAIL]",
-              explanation: 'The `re` module provides support for **regular expressions**. The `findall()` function finds all matches of a pattern, while `sub()` performs substitution. The `r` prefix creates a **raw string** which treats backslashes literally.'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'py_modules',
-      title: 'Modules & Packages',
-      description: 'Organize and reuse code effectively',
-      icon: 'layers-outline',
-      subcategories: [
-        {
-          id: 'py_module_basics',
-          title: 'Working with Modules',
-          description: 'Learn to create and import modules',
-          examples: [
-            {
-              id: 'py_module_1',
-              title: 'Creating Custom Modules',
-              description: 'Learn how to create and import your own modules',
-              code: `# math_operations.py
-def add(a, b):
-    return a + b
-
-def multiply(a, b):
-    return a * b
-
-# main.py
-from math_operations import add, multiply
-
-result1 = add(5, 3)
-result2 = multiply(4, 2)
-
-print(f"Addition: {result1}")
-print(f"Multiplication: {result2}")`,
-              output: "Addition: 8\nMultiplication: 8",
-              explanation: '**Modules** help organize code into reusable files. Use `import` to access functions from other modules. The `from module import name` syntax lets you import specific items. **Packages** are collections of modules in directories.'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'py_database',
-      title: 'Database Operations',
-      description: 'Work with SQL databases in Python',
-      icon: 'server-outline',
-      subcategories: [
-        {
-          id: 'py_sqlite',
-          title: 'SQLite Database',
-          description: 'Learn to work with SQLite databases',
-          examples: [
-            {
-              id: 'py_db_1',
-              title: 'Basic Database Operations',
-              description: 'Create tables and perform CRUD operations',
-              code: `import sqlite3
-
-# Connect to database
-conn = sqlite3.connect('example.db')
-cursor = conn.cursor()
-
-# Create table
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY,
-    name TEXT,
-    age INTEGER
-)''')
-
-# Insert data
-cursor.execute("INSERT INTO users (name, age) VALUES (?, ?)", ("Alice", 25))
-cursor.execute("INSERT INTO users (name, age) VALUES (?, ?)", ("Bob", 30))
-
-# Query data
-cursor.execute("SELECT * FROM users")
-users = cursor.fetchall()
-for user in users:
-    print(f"User: {user[1]}, Age: {user[2]}")
-
-conn.commit()
-conn.close()`,
-              output: "User: Alice, Age: 25\nUser: Bob, Age: 30",
-              explanation: 'The `sqlite3` module provides a lightweight database solution. Use **cursor** objects to execute SQL commands. The `?` placeholder prevents **SQL injection**. Always `commit()` changes and `close()` connections.'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'py_web',
-      title: 'Web Development',
-      description: 'Build web applications with Python',
-      icon: 'globe-outline',
-      subcategories: [
-        {
-          id: 'py_flask',
-          title: 'Flask Framework',
-          description: 'Create web applications using Flask',
-          examples: [
-            {
-              id: 'py_web_1',
-              title: 'Basic Flask App',
-              description: 'Create a simple web server with Flask',
-              code: `from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return 'Hello, World!'
-
-@app.route('/api/data')
-def get_data():
-    data = {
-        'message': 'Success',
-        'items': ['item1', 'item2', 'item3']
-    }
-    return jsonify(data)
-
-if __name__ == '__main__':
-    app.run(debug=True)`,
-              output: "* Running on http://127.0.0.1:5000/\n* Debug mode: on",
-              explanation: '**Flask** is a lightweight web framework. The `@app.route()` **decorator** defines URL routes. `jsonify()` converts Python dictionaries to **JSON** responses. The `debug=True` enables development features.'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'py_data_science',
-      title: 'Data Science',
-      description: 'Analyze and visualize data with Python',
-      icon: 'bar-chart-outline',
-      subcategories: [
-        {
-          id: 'py_pandas',
-          title: 'Pandas Basics',
-          description: 'Work with data using Pandas',
-          examples: [
-            {
-              id: 'py_pandas_1',
-              title: 'Data Analysis with Pandas',
-              description: 'Basic data manipulation using Pandas',
-              code: `import pandas as pd
-
-# Create a DataFrame
-data = {
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'City': ['New York', 'London', 'Paris']
-}
-df = pd.DataFrame(data)
-
-# Basic operations
-print("Original DataFrame:")
-print(df)
-
-print("\\nFiltered by Age > 28:")
-print(df[df['Age'] > 28])
-
-print("\\nAverage Age:", df['Age'].mean())`,
-              output: "Original DataFrame:\n   Name  Age      City\n0  Alice   25  New York\n1    Bob   30    London\n2  Charlie 35     Paris\n\nFiltered by Age > 28:\n   Name  Age    City\n1    Bob   30  London\n2  Charlie 35   Paris\n\nAverage Age: 30.0",
-              explanation: '**Pandas** is a powerful data analysis library. `DataFrame` is a 2-dimensional data structure. Use **boolean indexing** for filtering and built-in methods like `mean()` for **statistical operations**.'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'py_advanced',
-      title: 'Advanced Concepts',
-      description: 'Master advanced Python features',
-      icon: 'rocket-outline',
-      subcategories: [
-        {
-          id: 'py_decorators',
-          title: 'Decorators',
-          description: 'Understand Python decorators and their uses',
-          examples: [
-            {
-              id: 'py_dec_1',
-              title: 'Creating Decorators',
-              description: 'Learn how to create and use decorators',
-              code: `import time
-from functools import wraps
-
-def timer_decorator(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        result = func(*args, **kwargs)
-        end = time.time()
-        print(f"{func.__name__} took {end - start:.2f} seconds")
-        return result
-    return wrapper
-
-@timer_decorator
-def slow_function():
-    time.sleep(1)
-    return "Function completed"
-
-print(slow_function())`,
-              output: "slow_function took 1.00 seconds\nFunction completed",
-              explanation: '**Decorators** modify or enhance functions without changing their code. The `@wraps` decorator from `functools` preserves the original function\'s metadata. Use `*args` and `**kwargs` to handle any number of arguments.'
             }
           ]
         }

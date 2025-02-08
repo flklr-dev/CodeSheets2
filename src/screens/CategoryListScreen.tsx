@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   StyleSheet, 
   FlatList, 
   TouchableOpacity, 
   Text,
-  Image,
+  TextInput,
   Platform 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +14,12 @@ import { Category } from '../types';
 
 const CategoryListScreen = ({ route, navigation }: any) => {
   const { language } = route.params;
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredCategories = language.categories.filter((category: Category) =>
+    category.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    category.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const renderCategory = ({ item }: { item: Category }) => (
     <TouchableOpacity 
@@ -44,16 +50,24 @@ const CategoryListScreen = ({ route, navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image source={language.icon} style={styles.languageIcon} />
-        <View style={styles.headerText}>
-          <Text style={styles.languageTitle}>{language.name}</Text>
-          <Text style={styles.languageDescription}>{language.description}</Text>
-        </View>
+      <View style={styles.searchContainer}>
+        <Ionicons name="search-outline" size={20} color={`${COLORS.dark}80`} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search categories..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor={`${COLORS.dark}60`}
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <Ionicons name="close-circle" size={20} color={`${COLORS.dark}80`} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <FlatList
-        data={language.categories}
+        data={filteredCategories}
         renderItem={renderCategory}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
@@ -68,43 +82,33 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  header: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
     backgroundColor: COLORS.white,
-    borderBottomWidth: 1,
-    borderBottomColor: `${COLORS.dark}08`,
+    margin: 16,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: `${COLORS.dark}15`,
     ...Platform.select({
       ios: {
         shadowColor: COLORS.dark,
-        shadowOffset: { width: 0, height: 4 },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 8,
+        shadowRadius: 4,
       },
       android: {
-        elevation: 4,
+        elevation: 2,
       },
     }),
   },
-  headerText: {
+  searchInput: {
     flex: 1,
-    marginLeft: 16,
-  },
-  languageIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-  },
-  languageTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    fontSize: 16,
     color: COLORS.dark,
-    marginBottom: 4,
-  },
-  languageDescription: {
-    fontSize: 15,
-    color: `${COLORS.dark}90`,
   },
   card: {
     backgroundColor: COLORS.white,

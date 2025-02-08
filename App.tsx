@@ -6,7 +6,6 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 import { StatusBar } from 'expo-status-bar';
 import HomeScreen from './src/screens/HomeScreen';
 import CategoryListScreen from './src/screens/CategoryListScreen';
-import SubcategoryListScreen from './src/screens/SubcategoryListScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import SidebarContent from './src/screens/SidebarContent';
 import { COLORS } from './src/constants/colors';
@@ -36,13 +35,6 @@ const MainStack = () => (
       component={CategoryListScreen}
       options={({ route }: any) => ({ 
         title: route.params?.language?.name || 'Categories'
-      })}
-    />
-    <Stack.Screen 
-      name="SubcategoryList" 
-      component={SubcategoryListScreen}
-      options={({ route }: any) => ({ 
-        title: route.params?.category?.title || 'Subcategories'
       })}
     />
     <Stack.Screen 

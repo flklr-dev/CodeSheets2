@@ -4,6 +4,7 @@ import { COLORS } from '../constants/colors';
 import CategoryCard from '../components/CategoryCard';
 import { Ionicons } from '@expo/vector-icons';
 import { pythonData } from '../data/languages/python';
+import { javascriptData } from '../data/languages/javascript';
 
 const languages = [
   {
@@ -19,7 +20,8 @@ const languages = [
     name: 'JavaScript',
     icon: require('../assets/languages/javascript.png'),
     description: 'Programming language of the web',
-    color: '#F7DF1E'
+    color: '#F7DF1E',
+    categories: javascriptData.categories
   },
   {
     id: '3',
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.white,
     margin: 16,
-    marginBottom: 8,
+    marginBottom: 24,
     borderRadius: 12,
     paddingHorizontal: 12,
     elevation: 2,
